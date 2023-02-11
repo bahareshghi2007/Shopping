@@ -1,0 +1,230 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap'); */
+
+@font-face {
+    font-family: 'Bold';
+    src: url('/Font/TitilliumWeb-Bold.ttf')
+}
+
+@font-face {
+    font-family: 'Regular';
+    src: url('/Font/TitilliumWeb-Regular.ttf')
+}
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    border: none;
+    text-decoration: none;
+    outline: none;
+}
+
+body {
+    background-color: #fff;
+}
+
+:root {
+    --primaryColor: #2563eb;
+    --secondaryColor: #eff6ff;
+    --mainRed: #ff3e3e;
+}
+
+/* -------------------------Header------------------------- */
+.header {
+    width: 100%;
+    background-color: var(--secondaryColor);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-radius: 0 0 40px 40px;
+}
+
+
+.header-title {
+    font-family: 'Bold';
+    color: var(--primaryColor);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.header-title i {
+    color: var(--primaryColor);
+    font-size: 1.2rem;
+    padding-left: 5px;
+    position: relative;
+}
+
+.cart-number {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--mainRed);
+    color: var(--secondaryColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -12px;
+    right: -8px;
+    font-size: 1rem;
+}
+
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search {
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+.search i {
+    min-width: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    color: var(--primaryColor);
+    border-radius: 5px 0 0 5px;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 8.5rem;
+    height: 100%;
+    border-radius: 0 5px 5px 0;
+    font-size: 1rem;
+    font-family: 'Regular';
+    color: var(--primaryColor);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.sort {
+    width: 50vw;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 1rem 0;
+}
+
+.sort a {
+    font-family: 'Regular';
+    color: var(--primaryColor);
+    border-bottom: 1px solid var(--primaryColor);
+    padding: 0.5rem;
+    transition: all 0.3s;
+}
+
+.sort a:hover {
+    border-radius: 5px;
+}
+
+.sort a:active {
+    color: var(--primaryColor);
+}
+
+.sort a:link {
+    color: var(--primaryColor);
+}
+
+.sort-drop {
+    height: 100%;
+    min-width: 4rem;
+    border-radius: 5px;
+    background-color: #fff;
+    color: var(--primaryColor);
+    padding: 0 0.5rem;
+    margin-left: 0.5rem;
+    display: none;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+
+/* -------------------------Content------------------------- */
+.products-container {
+    max-width: 1170px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-column-gap: 1.5rem;
+    grid-row-gap: 2.5rem;
+    padding: 0 1rem;
+}
+
+.product {
+    background-color: #eff6ff;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Regular';
+    color: var(--primaryColor);
+    padding-bottom: 0.5rem;
+}
+
+.product-img {
+    width: 100%;
+    height: 65%;
+}
+
+.product-footer {
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-desc {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.add-to-cart-btn {
+    width: 5.5rem;
+    height: 1.7rem;
+    background-color: transparent;
+    border: 1px solid var(--primaryColor);
+    color: var(--primaryColor);
+    border-radius: 5px;
+    font-family: 'Regular';
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--primaryColor);
+    color: var(--secondaryColor);
+}
+
+@media screen and (max-width:667px) {
+    .search-container {
+        width: 90vw;
+    }
+
+    .header {
+        padding: 1rem 0;
+        border-radius: 15px;
+    }
+
+    .sort {
+        display: none;
+    }
+
+    .sort-drop {
+        display: flex;
+    }
+}
