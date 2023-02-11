@@ -1,6 +1,6 @@
 import CartModal from './CartModal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // cart modal:
+  //cart modal:
   CartModal;
 });
