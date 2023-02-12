@@ -1,7 +1,7 @@
 # Shopping
 This is a store project where you can add products to the shopping cart, remove them and change their quantity. You can also search and sort products.
 
----
+![](/ShoppingProjectView.PNG)
 
 ## Technologies used : 
 * *HTML & CSS*
