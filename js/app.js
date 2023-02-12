@@ -1,6 +1,9 @@
 import CartModal from './CartModal.js';
+import Products from './Products.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  //cart modal:
+  //cart Modal:
   CartModal;
+  // create Products:
+  Products.getProducts();
 });
