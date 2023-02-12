@@ -1,5 +1,6 @@
 const productsContainer = document.querySelector('.products-container');
 const searchInput = document.querySelector('.search-input');
+const sortContainer = document.querySelector('.sort');
 let allProducts = [];
 class Products {
   getProducts() {
@@ -34,12 +35,27 @@ class Products {
     searchInput.addEventListener('input', (e) =>
       this.searchProducts(e.target.value)
     );
+    //   addEvent to sortCotainer:
+    sortContainer.addEventListener('click', (e) =>
+      this.sortProducts(e.target.innerText)
+    );
   }
 
   searchProducts(searchValue) {
     const filteredProducts = allProducts.filter((product) =>
       product.title.toLowerCase().includes(searchValue.toLowerCase())
     );
+    //   update DOM:
+    this.createProducts(filteredProducts);
+  }
+
+  sortProducts(sortValue) {
+    const filteredProducts = allProducts.filter((product) =>
+      product.category
+        .toLowerCase()
+        .includes(sortValue.slice(0, 5).toLowerCase())
+    );
+    //   update DOM:
     this.createProducts(filteredProducts);
   }
 }
