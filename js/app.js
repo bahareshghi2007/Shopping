@@ -10,4 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // create CartItems:
   const cartItems = Storage.getCart();
   Products.createCartItem(cartItems);
+  // resetApp:
+  Products.resetApp();
 });

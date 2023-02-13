@@ -14,19 +14,19 @@ class Products {
       .then((products) => (allProducts = products.data))
       .then(() => this.createProducts(allProducts));
   }
+
   createProducts(products) {
     let productsDOM = '';
     products.forEach((product) => {
       const checkTitleLength =
         product.title.length > 15 ? 'long title' : 'short title';
-
       productsDOM += `
          <div class="product">
          <img src="${product.image}" alt="product-img" class="product-img">
          <div class="product-footer">
             <div class="product-desc">
                <p class="product-title">${product.title.slice(0, 15)} ${
-        checkTitleLength == 'long title' ? `...` : ''
+        checkTitleLength === 'long title' ? `...` : ''
       }</p>
                <p class="product-price">${product.price}$</p>
             </div>
@@ -56,7 +56,10 @@ class Products {
       btn.addEventListener('click', (e) => this.addCartItem(e.target));
 
       // btn DOM:
-      const isInCart = cart.find((item) => item.id == btn.dataset.id);
+
+      const isInCart = cart.find(
+        (item) => item.id === parseInt(btn.dataset.id)
+      );
       if (isInCart) {
         btn.innerText = 'In Cart';
         btn.disabled = true;
@@ -85,9 +88,11 @@ class Products {
   }
 
   addCartItem(e) {
-    const addedProduct = allProducts.find(
-      (product) => product.id == e.dataset.id
+    let addedProduct = allProducts.find(
+      (product) => product.id === parseInt(e.dataset.id)
     );
+    addedProduct = { ...addedProduct, quantity: 1 };
+    console.log(addedProduct);
     cart = [...cart, addedProduct];
     this.createCartItem(addedProduct);
     // update DOM:
@@ -96,7 +101,7 @@ class Products {
   }
 
   createCartItem(item) {
-    if (item.length == 0) {
+    if (item.length === 0) {
       return;
     } else if (item.length >= 1) {
       item.forEach((i) => {
@@ -110,14 +115,14 @@ class Products {
         <img src="${i.image}" alt="product-img" class="item-img">
         <div class="item-desc">
            <p class="item-title">${i.title.slice(0, 10)} ${
-          checkTitleLength == 'long title' ? `...` : ''
+          checkTitleLength === 'long title' ? `...` : ''
         }</p>
            <p class="item-price">${i.price}$</p>
         </div>
-        <div class="item-right">
+        <div class="item-right" data-id="${i.id}">
            <div class="item-quantity">
               <i class="fa-solid fa-chevron-up"></i>
-              <p class="item-number">1</p>
+              <p class="item-number">${i.quantity}</p>
               <i class="fa-solid fa-chevron-down"></i>
            </div>
            <i class="fa-solid fa-trash"></i>
@@ -126,6 +131,10 @@ class Products {
 
         // update DOM:
         cartContainer.appendChild(itemDiv);
+      });
+      // addEvent to cartItem:
+      document.querySelectorAll('.item-right').forEach((item) => {
+        item.addEventListener('click', (e) => this.cartLogic(e.target));
       });
     } else {
       const itemDiv = document.createElement('div');
@@ -138,14 +147,14 @@ class Products {
         <img src="${item.image}" alt="product-img" class="item-img">
         <div class="item-desc">
            <p class="item-title">${item.title.slice(0, 10)} ${
-        checkTitleLength == 'long title' ? `...` : ''
+        checkTitleLength === 'long title' ? `...` : ''
       }</p>
            <p class="item-price">${item.price}$</p>
         </div>
-        <div class="item-right">
-           <div class="item-quantity">
+        <div class="item-right" data-id="${item.id}>
+           <div class="item-quantity"">
               <i class="fa-solid fa-chevron-up"></i>
-              <p class="item-number">1</p>
+              <p class="item-number">${item.quantity}</p>
               <i class="fa-solid fa-chevron-down"></i>
            </div>
            <i class="fa-solid fa-trash"></i>
@@ -154,11 +163,42 @@ class Products {
 
       // update DOM:
       cartContainer.appendChild(itemDiv);
+      // addEvent to cartItem:
+      document
+        .querySelector('.item-right')
+        .addEventListener('click', (e) => this.cartLogic(e.target));
     }
 
     cartNumber.innerText = cartContainer.childNodes.length;
     // update LocalStorage:
     Storage.saveCart(cart);
+  }
+
+  cartLogic(e) {
+    const cartItems = Storage.getCart();
+    if (e.classList.contains('fa-chevron-up')) {
+      const incrementedItem = cartItems.find(
+        (item) => item.id === parseInt(e.parentElement.parentElement.dataset.id)
+      );
+      incrementedItem.quantity++;
+      // update DOM:
+      e.parentElement.children[1].innerText++;
+    } else if (e.classList.contains('fa-chevron-down')) {
+      const decrementedItem = cartItems.find(
+        (item) => item.id === parseInt(e.parentElement.parentElement.dataset.id)
+      );
+      if (decrementedItem.quantity === 1) {
+        console.log('remove item');
+      } else {
+        decrementedItem.quantity--;
+        // update DOM:
+        e.parentElement.children[1].innerText--;
+      }
+    } else if (e.classList.contains('fa-trash')) {
+      console.log('remove item');
+    }
+    // update storage
+    Storage.saveCart(cartItems);
   }
 
   resetApp() {
