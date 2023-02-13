@@ -12,4 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   Products.createCartItem(cartItems);
   // resetApp:
   Products.resetApp();
+  // cart Logig:
+  Products.cartLogic();
 });

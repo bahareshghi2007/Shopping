@@ -4,10 +4,17 @@ const searchInput = document.querySelector('.search-input');
 const sortContainer = document.querySelector('.sort');
 const cartContainer = document.querySelector('.cart-items');
 const cartNumber = document.querySelector('.cart-number');
+const clearCartBtn = document.querySelector('.clear-btn');
+const totalPrice = document.querySelector('.total-price');
+const sortDrop = document.querySelector('.sort-drop');
+
 let allProducts = [];
 let cart = Storage.getCart();
 
 class Products {
+  constructor() {
+    clearCartBtn.addEventListener('click', () => this.clearCart());
+  }
   getProducts() {
     axios
       .get('https://fakestoreapi.com/products')
@@ -45,7 +52,10 @@ class Products {
     );
 
     //   addEvent to sortCotainer:
-    sortContainer.addEventListener('click', (e) =>
+    [...sortContainer.children].forEach((child) => {
+      child.addEventListener('click', () => this.sortProducts(child.innerText));
+    });
+    sortDrop.addEventListener('click', (e) =>
       this.sortProducts(e.target.innerText)
     );
 
@@ -78,6 +88,7 @@ class Products {
   }
 
   sortProducts(sortValue) {
+    console.log(sortValue);
     const filteredProducts = allProducts.filter((product) =>
       product.category
         .toLowerCase()
@@ -85,6 +96,7 @@ class Products {
     );
     //   update DOM:
     this.createProducts(filteredProducts);
+    this.resetApp();
   }
 
   addCartItem(e) {
@@ -92,7 +104,6 @@ class Products {
       (product) => product.id === parseInt(e.dataset.id)
     );
     addedProduct = { ...addedProduct, quantity: 1 };
-    console.log(addedProduct);
     cart = [...cart, addedProduct];
     this.createCartItem(addedProduct);
     // update DOM:
@@ -131,10 +142,7 @@ class Products {
 
         // update DOM:
         cartContainer.appendChild(itemDiv);
-      });
-      // addEvent to cartItem:
-      document.querySelectorAll('.item-right').forEach((item) => {
-        item.addEventListener('click', (e) => this.cartLogic(e.target));
+        cartNumber.innerText = cartContainer.childNodes.length;
       });
     } else {
       const itemDiv = document.createElement('div');
@@ -151,11 +159,11 @@ class Products {
       }</p>
            <p class="item-price">${item.price}$</p>
         </div>
-        <div class="item-right" data-id="${item.id}>
-           <div class="item-quantity"">
-              <i class="fa-solid fa-chevron-up"></i>
-              <p class="item-number">${item.quantity}</p>
-              <i class="fa-solid fa-chevron-down"></i>
+        <div class="item-right" data-id="${item.id}">
+           <div class="item-quantity">
+           <i class="fa-solid fa-chevron-up"></i>
+           <p class="item-number">${item.quantity}</p>
+           <i class="fa-solid fa-chevron-down"></i>
            </div>
            <i class="fa-solid fa-trash"></i>
         </div>
@@ -163,53 +171,109 @@ class Products {
 
       // update DOM:
       cartContainer.appendChild(itemDiv);
-      // addEvent to cartItem:
-      document
-        .querySelector('.item-right')
-        .addEventListener('click', (e) => this.cartLogic(e.target));
+      cartNumber.innerText = cartContainer.childNodes.length;
     }
-
-    cartNumber.innerText = cartContainer.childNodes.length;
+    this.cartValue();
     // update LocalStorage:
     Storage.saveCart(cart);
   }
 
-  cartLogic(e) {
-    // const cartItems = Storage.getCart();
-    if (e.classList.contains('fa-chevron-up')) {
-      const incrementedItem = cart.find(
-        (item) => item.id === parseInt(e.parentElement.parentElement.dataset.id)
-      );
-      incrementedItem.quantity++;
-      // update DOM:
-      e.parentElement.children[1].innerText++;
-    } else if (e.classList.contains('fa-chevron-down')) {
-      const decrementedItem = cart.find(
-        (item) => item.id === parseInt(e.parentElement.parentElement.dataset.id)
-      );
-      if (decrementedItem.quantity === 1) {
-        this.removeCartItem(e.parentElement.parentElement.parentElement);
-      } else {
-        decrementedItem.quantity--;
+  cartLogic() {
+    cartContainer.addEventListener('click', (e) => {
+      if (e.target.classList.contains('fa-chevron-up')) {
+        const incrementedItem = cart.find(
+          (item) =>
+            item.id ===
+            parseInt(e.target.parentElement.parentElement.dataset.id)
+        );
+        incrementedItem.quantity++;
         // update DOM:
-        e.parentElement.children[1].innerText--;
+        e.target.parentElement.children[1].innerText++;
+        // update storage
+        Storage.saveCart(cart);
+        // update CartValue:
+        this.cartValue();
+      } else if (e.target.classList.contains('fa-chevron-down')) {
+        const decrementedItem = cart.find(
+          (item) =>
+            item.id ===
+            parseInt(e.target.parentElement.parentElement.dataset.id)
+        );
+        if (decrementedItem.quantity === 1) {
+          this.removeCartItem(
+            e.target.parentElement.parentElement.parentElement
+          );
+        } else {
+          decrementedItem.quantity--;
+          // update DOM:
+          e.target.parentElement.children[1].innerText--;
+          // update storage
+          Storage.saveCart(cart);
+          // update CartValue:
+          this.cartValue();
+        }
+      } else if (e.target.classList.contains('fa-trash')) {
+        this.removeCartItem(e.target.parentElement.parentElement);
       }
-    } else if (e.classList.contains('fa-trash')) {
-      this.removeCartItem(e.parentElement.parentElement);
-    }
-    // update storage
-    Storage.saveCart(cart);
+    });
   }
 
   removeCartItem(item) {
     // update DOM:
     cartContainer.removeChild(item);
+
+    const addToCartBtns = [...document.querySelectorAll('.add-to-cart-btn')];
+    addToCartBtns.forEach((btn) => {
+      const isInCart = cart.find(
+        (item) => item.id === parseInt(btn.dataset.id)
+      );
+      if (isInCart) {
+        const button = addToCartBtns.find(
+          (btn) => btn.dataset.id == item.childNodes[5].dataset.id
+        );
+        button.innerText = 'Add To Cart';
+        button.disabled = false;
+      }
+    });
+    cartNumber.innerText = cartContainer.childNodes.length;
+
     // update LocalStorage:
     const filteredItems = cart.filter(
       (i) => i.id !== parseInt(item.childNodes[5].dataset.id)
     );
     cart = filteredItems;
+    // update LocalStorage:
     Storage.saveCart(cart);
+    // update CartValue:
+    this.cartValue();
+  }
+
+  clearCart() {
+    // update DOM:
+    while (cartContainer.children.length) {
+      cartContainer.removeChild(cartContainer.children[0]);
+    }
+
+    const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
+    addToCartBtns.forEach((btn) => {
+      btn.innerText = 'Add To Cart';
+      btn.disabled = false;
+    });
+    cartNumber.innerText = cartContainer.childNodes.length;
+
+    // update LocalStorage:
+    cart = [];
+    Storage.saveCart(cart);
+    // update CartValue:
+    this.cartValue();
+  }
+
+  cartValue() {
+    let total = 0;
+    cart.forEach(
+      (item) => (total = Math.trunc(total + item.price * item.quantity))
+    );
+    totalPrice.innerHTML = `Total Price: ${total}$`;
   }
 
   resetApp() {
