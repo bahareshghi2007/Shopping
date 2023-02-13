@@ -175,30 +175,41 @@ class Products {
   }
 
   cartLogic(e) {
-    const cartItems = Storage.getCart();
+    // const cartItems = Storage.getCart();
     if (e.classList.contains('fa-chevron-up')) {
-      const incrementedItem = cartItems.find(
+      const incrementedItem = cart.find(
         (item) => item.id === parseInt(e.parentElement.parentElement.dataset.id)
       );
       incrementedItem.quantity++;
       // update DOM:
       e.parentElement.children[1].innerText++;
     } else if (e.classList.contains('fa-chevron-down')) {
-      const decrementedItem = cartItems.find(
+      const decrementedItem = cart.find(
         (item) => item.id === parseInt(e.parentElement.parentElement.dataset.id)
       );
       if (decrementedItem.quantity === 1) {
-        console.log('remove item');
+        this.removeCartItem(e.parentElement.parentElement.parentElement);
       } else {
         decrementedItem.quantity--;
         // update DOM:
         e.parentElement.children[1].innerText--;
       }
     } else if (e.classList.contains('fa-trash')) {
-      console.log('remove item');
+      this.removeCartItem(e.parentElement.parentElement);
     }
     // update storage
-    Storage.saveCart(cartItems);
+    Storage.saveCart(cart);
+  }
+
+  removeCartItem(item) {
+    // update DOM:
+    cartContainer.removeChild(item);
+    // update LocalStorage:
+    const filteredItems = cart.filter(
+      (i) => i.id !== parseInt(item.childNodes[5].dataset.id)
+    );
+    cart = filteredItems;
+    Storage.saveCart(cart);
   }
 
   resetApp() {
