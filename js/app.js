@@ -1,6 +1,7 @@
 import CartModal from './CartModal.js';
 import Products from './Products.js';
 import Storage from './Storage.js';
+const sortDrop = document.querySelector('.sort-drop');
 
 document.addEventListener('DOMContentLoaded', () => {
   //cart Modal:
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Products.createCartItem(cartItems);
   // resetApp:
   Products.resetApp();
+  sortDrop.value = 'all';
   // cart Logig:
   Products.cartLogic();
 });

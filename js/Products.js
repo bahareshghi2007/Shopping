@@ -85,17 +85,24 @@ class Products {
     );
     //   update DOM:
     this.createProducts(filteredProducts);
+    sortDrop.value = 'all';
   }
 
   sortProducts(sortValue) {
     console.log(sortValue);
-    const filteredProducts = allProducts.filter((product) =>
-      product.category
-        .toLowerCase()
-        .includes(sortValue.slice(0, 5).toLowerCase())
-    );
+    if (sortValue === 'All') {
+      //   update DOM:
+      this.createProducts(allProducts);
+    } else {
+      const filteredProducts = allProducts.filter((product) =>
+        product.category
+          .toLowerCase()
+          .includes(sortValue.slice(0, 5).toLowerCase())
+      );
+      //   update DOM:
+      this.createProducts(filteredProducts);
+    }
     //   update DOM:
-    this.createProducts(filteredProducts);
     this.resetApp();
   }
 
