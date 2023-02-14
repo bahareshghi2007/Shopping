@@ -91,7 +91,6 @@ class Products {
   }
 
   sortProducts(sortValue) {
-    console.log(sortValue);
     if (sortValue === 'all') {
       //   update DOM:
       this.createProducts(allProducts);
