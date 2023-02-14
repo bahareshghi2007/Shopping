@@ -2,7 +2,9 @@
 This is a store project where you can add products to the shopping cart, remove them and change their quantity. You can also search and sort products.
 
 ![](/ShoppingProjectView.PNG)
+[View Online ( Click Here )](https://baharshopping.netlify.app/)
 
+---
 ## Technologies used : 
 * *HTML & CSS*
 * *JavaScript*
