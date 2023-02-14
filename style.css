@@ -415,7 +415,7 @@
 
 
   /* -------------------------Media------------------------- */
-  @media screen and (max-width:740px) {
+  @media screen and (max-width:1200px) {
       .search-container {
           width: 90vw;
       }
