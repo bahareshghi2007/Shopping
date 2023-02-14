@@ -55,9 +55,7 @@ class Products {
     [...sortContainer.children].forEach((child) => {
       child.addEventListener('click', () => this.sortProducts(child.innerText));
     });
-    sortDrop.addEventListener('click', (e) =>
-      this.sortProducts(e.target.innerText)
-    );
+    sortDrop.addEventListener('click', (e) => this.sortProducts(e.target));
 
     // addToCartBtns:
     const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
@@ -89,7 +87,21 @@ class Products {
   }
 
   sortProducts(sortValue) {
-    console.log(sortValue);
+    if (sortValue.value) {
+      console.log(sortValue.value);
+      if (sortValue.value === 'all') {
+        //   update DOM:
+        this.createProducts(allProducts);
+      } else {
+        const filteredProducts = allProducts.filter((product) =>
+          product.category
+            .toLowerCase()
+            .includes(sortValue.value.slice(0, 5).toLowerCase())
+        );
+        //   update DOM:
+        this.createProducts(filteredProducts);
+      }
+    }
     if (sortValue === 'All') {
       //   update DOM:
       this.createProducts(allProducts);
